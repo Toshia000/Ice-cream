@@ -72,3 +72,8 @@ input[type="email"]{
     color: red;
     display: none;
 }
+
+.table-wrap {
+    width: 100%;
+    overflow-x: auto;
+}

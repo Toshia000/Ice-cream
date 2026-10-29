@@ -5,42 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin View</title>
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-     <script src="https://cdn.datatables.net/3.1.4/js/dataTables.min.js"></script>
-     <link rel="stylesheet" href="https://cdn.datatables.net/3.1.4/css/dataTables.dataTables.min.css">
-  
+    <script src="https://cdn.datatables.net/3.1.4/js/dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/4.1.1/js/dataTables.responsive.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/3.1.4/css/dataTables.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/4.1.1/css/responsive.dataTables.min.css">
+
 </head>
 <body>
     <h1>Orders</h1>
-    <table id="order-table" class="display">
-        <thead>
+    <div class="table-wrap">
+        <table id="order-table" class="display nowrap" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Customer</th>
+                    <th>Email</th>
+                    <th>Flavor</th>
+                    <th>Cone</th>
+                    <th>Toppings</th>
+                    <th>Comments</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% orders.forEach(order => { %>
             <tr>
-                <th>Time</th>
-                <th>Customer</th>
-                <th>Email</th>
-                <th>Flavor</th>
-                <th>Cone</th>
-                <th>Toppings</th>
-                <th>Comments</th>
+                <td><%= order.timestamp.toLocaleString() %></td>
+                <td><%= order.name %></td>
+                <td><%= order.email %></td>
+                <td><%= order.flavor %></td>
+                <td><%= order.cone %></td>
+                <td><%= order.toppings %></td>
+                <td><%= order.comments %></td> 
             </tr>
-        </thead>
-        <tbody>
-            <% orders.forEach(order => { %>
-        <tr>
-            <td><%= order.timestamp.toLocaleString() %></td>
-            <td><%= order.name %></td>
-            <td><%= order.email %></td>
-            <td><%= order.flavor %></td>
-            <td><%= order.cone %></td>
-            <td><%= order.toppings %></td>
-            <td><%= order.comments %></td> 
-        </tr>
-
-   <% }); %>
-        </tbody>
-    </table>
+    
+       <% }); %>
+            </tbody>
+        </table>
+    </div>
     
      <script>
-        new DataTable('#order-table');
+        new DataTable('#order-table', {
+            responsive: true
+        });
     </script>
 </body>
 </html>
