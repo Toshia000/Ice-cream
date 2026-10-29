@@ -6,7 +6,7 @@ import express from 'express';
 const app = express();
 
 // Define a port number
-const PORT = 3001;
+const PORT = 3004;
 
 const orders = [];
 
@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Define a defaule route ("/")
 app.get('/', (req, res) => {
-    res.sendFile(`${import.meta.dirname}/views/home.html`)
+    res.render('home');
 });
 
 app.post('/submit-order', (req, res) => {
@@ -34,6 +34,9 @@ app.post('/submit-order', (req, res) => {
     res.render('confirm', {order});
 })
 
+app.get('/admin', (req, res) => {
+    res.render('admin', {orders});
+});
 app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);
 });
