@@ -11,6 +11,10 @@ const PORT = 3001;
 // Enable static file serving
 app.use(express.static('public'));
 
+app.set('view engine', 'ejs');
+
+app.use(express.urlencoded({ extended: true }));
+
 // Define a defaule route ("/")
 app.get('/', (req, res) => {
     res.sendFile(`${import.meta.dirname}/views/home.html`)
