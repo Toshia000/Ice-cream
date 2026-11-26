@@ -119,7 +119,11 @@ app.get('/admin', requireLogin, async (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-    res.render('login', { error: null });
+    if (req.session.loggedIn) {
+        res.redirect('/admin');
+    } else {
+        res.render('login', { error: null });
+    }
 });
 
 // Process the login form
