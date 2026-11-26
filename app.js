@@ -2,6 +2,7 @@
 import express from 'express';
 import mysql2 from 'mysql2';
 import dotenv from 'dotenv';
+import session from 'express-session';
 
 // Create an instance
 // Express application
@@ -38,7 +39,51 @@ app.set('view engine', 'ejs');
 
 app.use(express.urlencoded({ extended: true }));
 
-// Define a defaule route ("/")
+// Session middleware: lets the server remember users between requests
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { maxAge: 1000 * 60 * 60 }   // 1 hour
+}));
+
+// Only let logged-in users through; send everyone else to /login
+function requireLogin(req, res, next) {
+    if (req.session.loggedIn) {
+        next();
+    } else {
+        res.redirect('/login');
+    }
+}
+
+app.get('/login', (req, res) => {
+    res.render('login', { error: null });
+});
+
+// Process the login form
+app.post('/login', (req, res) => {
+    const username = req.body.username;
+    const password = req.body.password;
+ 
+    // Compare the form values to the values in .env
+    if (username === process.env.ADMIN_USER &&
+        password === process.env.ADMIN_PASSWORD) {
+        req.session.loggedIn = true;
+        res.redirect('/admin');
+    } else {
+        res.render('login',
+            { error: 'Invalid username or password.' });
+    }
+});
+
+// Log out by deleting the session
+app.get('/logout', (req, res) => {
+    req.session.destroy(() => {
+        res.redirect('/login');
+    });
+});
+
+// Define a default route ("/")
 app.get('/', (req, res) => {
     res.render('home');
 });
@@ -86,7 +131,7 @@ app.post('/confirm', async (req, res) => {
 
 });
 
-app.get('/admin', async (req, res) => {
+app.get('/admin', requireLogin, async (req, res) => {
         try {
 
         // Fetch all orders from database, most recent first
@@ -99,8 +144,6 @@ app.get('/admin', async (req, res) => {
         res.status(500).send('Error loading orders: ' + err.message);
     }
 });
-
-
 
 
 app.listen(PORT, () => {
