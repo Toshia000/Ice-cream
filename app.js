@@ -119,11 +119,7 @@ app.get('/admin', requireLogin, async (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-    try {
-        res.render('login', { error: null });
-    } catch (err) {
-        res.render('login', { error: err.message });
-    }
+    res.render('login', { error: null });
 });
 
 // Process the login form
