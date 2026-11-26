@@ -111,7 +111,7 @@ app.get('/admin', requireLogin, async (req, res) => {
         const [orders] = await pool.query(`SELECT * FROM orders
                 ORDER BY timestamp DESC`);  
         // Render the admin page
-        res.render('admin', { orders });        
+        res.render('admin', { orders, loginTime: req.session.loginTime });        
     } catch (err) {
         console.error('Database error:', err); 
         res.status(500).send('Error loading orders: ' + err.message);
@@ -135,6 +135,7 @@ app.post('/login', (req, res) => {
     if (username === process.env.ADMIN_USER &&
         password === process.env.ADMIN_PASSWORD) {
             req.session.loggedIn = true;
+            req.session.loginTime = new Date();
             res.redirect('/admin');
         } else {
             res.render('login',
